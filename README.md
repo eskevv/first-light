@@ -33,6 +33,9 @@ PolygonObject branch = ground.FindByName("Branch");
 PolygonObject branch = map.FindObject("Branch");
 ```
 
+It's also possible to find any object in the given map using Linq, but FirstLight has the task of doing this so you won't
+have to cast it back to the type you are looking for. It offers similar methods for finding any object or layer by name, class or type.
+
 **Animated Tiles**
 > FirstLight does all the tile animationsfor you but can also provide the frame data if you wish to do all the updating.  
 > In the update loop you can call the map instance's ``Update`` that takes in how many seconds have passed(delta):  
