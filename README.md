@@ -49,11 +49,11 @@ Draw(texture, tilePosition, tileSource);
 
 ---
 ### Installation
-1) With Nuget Package Manager:  
+Option 1: With Nuget Package Manager:  
 ```
 dotnet add package firstlight 
 ```
-2) Clone or download the repo into a dir of choice.
+Option 2: Clone or download the repo into a dir of choice.
 Then add to your .csproj file in your own project:
 ```xml
 <ItemGroup>
