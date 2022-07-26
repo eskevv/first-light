@@ -53,7 +53,6 @@ Draw(texture, tile.Position, tile.Source); // frame is incremented here
 > If you wish to access the data without changing the state of the tile, you can get around this by instead using  
 > the ```GetFrames``` property, which returns a list of Coordinates for each frame of animation.
 
-
 ---
 ### Installation
 1) With Nuget Package Manager:
@@ -67,6 +66,7 @@ Then add to your .csproj file in your own project:
   <ProjectReference Include = "<path to FirstLight\FirstLight.csproj>" />
 </ItemGroup>
 ```
+
 ---
 ### Using FirstLight to Render all Tiles
 ```cs

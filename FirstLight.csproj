@@ -7,4 +7,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>FirstLight</PackageId>
+    <Version>0.8.0</Version>
+    <Authors>eskevv</Authors>
+    <Company>eskevv</Company>
+    <Copyright>eskevv 2022</Copyright>
+    <PackageDescription>C# library for fully automating map tiles from Tiled's tmx and tsx formats.</PackageDescription>
+    <RepositoryUrl>https://github.com/eskevv/FirstLight</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
 </Project>

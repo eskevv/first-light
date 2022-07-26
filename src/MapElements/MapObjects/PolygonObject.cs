@@ -4,7 +4,7 @@ namespace FirstLight;
 
 public class PolygonObject : MapObject
 {
-   public Coordinate[] Points;
+   public Coordinates[] Points;
 
    public PolygonObject(string layerName, TiledObject tiledObject) : base(layerName, tiledObject)
    {

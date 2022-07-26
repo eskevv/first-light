@@ -7,12 +7,12 @@ public static class Extensions
       return src.Split(',').Select(x => int.Parse(x)).ToArray();
    }
 
-   public static Coordinate[] ToCoordinates(this float[] points)
+   public static Coordinates[] ToCoordinates(this float[] points)
    {
-      var coordinates = new List<Coordinate>();
+      var coordinates = new List<Coordinates>();
       for (int x = 0; x < points.Length; x += 2)
       {
-         coordinates.Add(new Coordinate(points[x], points[x + 1]));
+         coordinates.Add(new Coordinates(points[x], points[x + 1]));
       }
       return coordinates.ToArray();
    }

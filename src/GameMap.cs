@@ -14,6 +14,7 @@ public class GameMap
    public string RenderOrder => _mapData.RenderOrder;
    public string Orientation => _mapData.Orientation;
 
+   public float TimePassed { get; private set; }
    public List<MapTile> OrderedTiles { get; private set; }
 
    private readonly TiledMap _mapData;
@@ -27,6 +28,12 @@ public class GameMap
       _activeLayers = new HashSet<Layer>();
       _layers.ForEach(x => _activeLayers.Add(x));
       OrderedTiles = LoadTiles();
+   }
+
+   public void Update(float time)
+   {
+      TimePassed = time;
+      OrderedTiles.ForEach(x => x.Update());
    }
 
    // --API
@@ -105,7 +112,7 @@ public class GameMap
             if (gid == 0) continue;
             foreach (var tileset in _mapData.Tilesets)
             {
-               tiles.Add(new MapTile(layer.Name, tileset, gid, x, layer.Width));
+               tiles.Add(new MapTile(layer.Name, tileset, gid, x, layer.Width, this));
             }
          }
          tileLayers.Add(new TileLayer(layer.Name, tiles));
