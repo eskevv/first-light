@@ -91,10 +91,11 @@ foreach (var item in map.OrderedTiles)
 ```
 
 ---
-### Features Not Implemented Yet
+### Features Not Implemented Yet (Soon)
 * Parallax factors
 * Opacity
 * Tile flipping
+* Infinite maps
 
 ---
 ### Building And Version Support
