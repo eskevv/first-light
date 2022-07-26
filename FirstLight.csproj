@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>FirstLight</PackageId>
-    <Version>0.8.5</Version>
+    <Version>0.8.6</Version>
     <Authors>eskevv</Authors>
     <Company>eskevv</Company>
     <Copyright>eskevv 2022</Copyright>

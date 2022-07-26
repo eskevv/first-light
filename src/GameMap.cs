@@ -80,6 +80,23 @@ public class GameMap
       }
       throw new FirstLightException("The given object was not found in any object layer.");
    }
+   ///<summary>Grab all tiles from this map that appear under only a specific tileset(can be filtered by active layers).</summary>
+   public List<MapTile> TilesFromTileset(string imageName, bool layerFilterd = false)
+   {
+      var tiles = new List<MapTile>();
+      foreach (var item in _layers)
+      {
+         if (item is ObjectLayer) continue;
+         var layer = (TileLayer)item;
+         for (int x = 0; x < layer.ElementCount; x++)
+         {
+            if (layer[x].ImageName != imageName) continue;
+            if (layerFilterd && !_activeLayers.Contains(_layers[x])) continue;
+            tiles.Add(layer[x]);
+         }
+      }
+      return tiles;
+   }
 
    // --Private Methods
 

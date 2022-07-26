@@ -6,7 +6,7 @@ namespace FirstLight;
 public static class MapLoader
 {
    static void Main(string[] args) { }
-   
+
    public static GameMap Load(string filePath)
    {
       XDocument tmxMap = XDocument.Load(filePath);
