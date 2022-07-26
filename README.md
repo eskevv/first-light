@@ -1,13 +1,17 @@
 # FirstLight
 
 FirstLight is a standalone .NET C# library for importing and fully automating all of your work from the Tiled editor.  
-*No ID management is needed to get your map shown on the screen.* This also includes animation data.  
-All data is saved inside of a MapModel which closeley resembles the original TMX format.
+*No ID management is needed to get your map shown on the screen.* This also means animations.  
+All data is saved inside of a MapModel which closeley resembles the original TMX format, but you interact with it through the GameMap class.
 
-Since FirstLight is a standalone library, it doesn't not rely on any external frameworks or game engines in order to start using it. It still 
-ensures that maps can be quickly displayed on the screen with minimal effort, and offers helper methods to be more felxible with it.  
+Since FirstLight is a standalone library, it doesn't rely on any external frameworks or game engines in order to use it. It still 
+ensures that maps can be quickly displayed on the screen with minimal effort, and the API provides methods to be more felxible with how tiles are rendered.
+
+Note: It is up to you to store the actual textures, (preferably to cache them by tileset name). As a standalone library, FirstLight doesn't do any of the
+actual rendering, but provides an interface to all of the necessary tmx data.
 
 **Tile Structure** 
+
 > Drawing tiles is as simple as pulling data from a collection of a built in type which includes values like:  
 > * Image name
 > * Tileset SourceCoords
@@ -17,20 +21,53 @@ ensures that maps can be quickly displayed on the screen with minimal effort, an
 **Working with Layers**  
 > Layers provide indexing into tiles and can be toggled on and off
 > * Enable and disable layers by their name
-> * Hand pick tile or object layers with generic methods
-> * Get tiles only from a specific tileset (filtering options)
-> * Get all filtered tiles in correct layer order from one list
+> * Hand pick tile, image, and object layers with generic methods
+> * Get tiles that appear under only a specific tileset (with filtering options)
+> * Get all filtered and correctly ordered tile from a single list  
 
-Finding an object from a layer
+Finding an object from a layer:
 ```cs
 TileLayer ground = map.GetLayer<TileLayer>("ground");
 PolygonObject branch = ground.FindByName("Branch");
 
 // or more efficiently if the object has a unique name:
-PolygonObject branch = map.FindObject("Branch);
+PolygonObject branch = map.FindObject("Branch");
 ```
 
-### Using FirstLight -example
+**Animated Tiles**
+> FirstLight offers all the animation data you will need right from the start.  
+> After loading the map you can specify a fixed timestep for your animations:  
+```cs
+map.SetTimeStep(60);
+```
+> However this is inconsistent if you know your frame rate will vary and therefore only optional.  
+> Instead in your game update method:
+```cs
+// takes in a float that indicates how much time has passed
+map.Update(time);
+
+// then in the draw call (varies by rendering methods):
+Draw(texture, tile.Position, tile.Source);
+```
+> NOTE: All tiles have their frames automatically incremented each time the source coordinates are returned.  
+> -- this was done to keep things simple as a full mapping system and take the animating task away from the user.  
+
+
+---
+### Installation
+1) With Nuget Package Manager:
+```
+dotnet add package firstlight
+```
+2) Clone or download the repo into a dir of choice.
+Then add to your .csproj file in your own project:
+```xml
+<ItemGroup>
+  <ProjectReference Include = "<path to FirstLight\FirstLight.csproj>" />
+</ItemGroup>
+```
+---
+### Using FirstLight to Render all Tiles
 ```cs
 // load the map 
 TileMap map = MapLoader.Load(filePath);
@@ -39,7 +76,7 @@ TileMap map = MapLoader.Load(filePath);
 map.DisableLayers("background", "water", "trees");
 map.EnableLayers("water");
 
-// draw filtered tiles
+// draw all tiles with filtering applied
 foreach (var item in map.OrderedTiles)
 {
   // pull data
@@ -54,9 +91,7 @@ foreach (var item in map.OrderedTiles)
 ```
 
 ---
-### Todo:
+### Not Implemented:
 * Parallax factors
 * Opacity
 * Tile flipping
-* Offsets
-* Alternative data encodings (currently only works with csv layers)
