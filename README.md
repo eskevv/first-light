@@ -11,7 +11,6 @@ Note: It is up to you to store the actual textures, (preferably to cache them by
 actual rendering, but provides an interface to all of the necessary tmx data. This versatility means you can use it with popular game engines like Unity3D, Godot, or CryEngine.
 
 **Tile Structure** 
-
 > Drawing tiles is as simple as pulling data from a collection of a built in type which includes values like:  
 > * Image name
 > * Tileset SourceCoords
@@ -41,7 +40,7 @@ PolygonObject branch = map.FindObject("Branch");
 map.SetTimeStep(60);
 ```
 > However this is inconsistent if you know your frame rate will vary and therefore only optional.  
-> Instead in your game update method:
+> Instead in your game <code>update</code> method:
 ```cs
 // takes in a float that indicates how much time has passed
 map.Update(time);
