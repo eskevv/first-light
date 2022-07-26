@@ -70,7 +70,7 @@ Then add to your .csproj file in your own project:
 // load the map 
 TileMap map = MapLoader.Load(filePath);
 
-// disbale / enable layers
+// disbale / enable layers (all are enabled by default)
 map.DisableLayers("background", "water", "trees");
 map.EnableLayers("water");
 
