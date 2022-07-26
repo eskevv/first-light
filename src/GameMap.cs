@@ -56,6 +56,18 @@ public class GameMap
       return (T)_layers.First(x => x.Name == name);
    }
 
+   public T FindObject<T>(string name) where T : MapObject
+   {
+      IEnumerable<Layer> layers = _activeLayers.Where(x => x.GetType() == typeof(ObjectLayer));
+      List<ObjectLayer> objectLayers = layers.Select(x => (ObjectLayer)x).ToList();
+      foreach (var item in objectLayers)
+      {
+         var t = item.FindByName(name);
+         if (t != null) return (T)t;
+      }
+      throw new FirstLightException("The given object was not found in any object layer.");
+   }
+
    // --Private Methods
 
    private List<MapTile> LoadTiles()
