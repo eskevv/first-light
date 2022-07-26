@@ -1,8 +1,8 @@
 # FirstLight
 
 FirstLight is a standalone .NET C# library for importing and fully automating all of your work from the Tiled editor.  
-*No ID management is needed to get your map shown on the screen.* This also means animations.  
-All data is saved inside of a MapModel which closeley resembles the original TMX format, but you interact with it through the GameMap class.
+*No ID management is needed to get your map shown on the screen.* This also means animations.
+All data is saved inside of a MapModel which closeley resembles the original TMX format, but you interact with it through the ```GameMap``` class.
 
 Since FirstLight is a standalone library, it doesn't rely on any external frameworks or game engines in order to use it. It still 
 ensures that maps can be quickly displayed on the screen with minimal effort, and the API provides methods to be more felxible with how tiles are rendered.
