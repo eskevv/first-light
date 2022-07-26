@@ -24,7 +24,7 @@ actual rendering, but provides an interface to all of the necessary tmx data. Th
 > * Get tiles that appear under only a specific tileset (with filtering options)
 > * Get all filtered and correctly ordered tile from a single list  
 
-Finding an object from a layer:
+Finding an object:
 ```cs
 TileLayer ground = map.GetLayer<TileLayer>("ground");
 PolygonObject branch = ground.FindByName("Branch");
@@ -90,7 +90,7 @@ foreach (var item in map.OrderedTiles)
 ```
 
 ---
-### Not Implemented:
+### Features Not Implemented Yet
 * Parallax factors
 * Opacity
 * Tile flipping
@@ -99,12 +99,12 @@ foreach (var item in map.OrderedTiles)
 ### Building And Version Support
 You need .NET 6 to start using First light as it was built with a more modern syntax that may not be suppored by earlier versions of C#.
 
-Tiled should work with most if not all versions of Tiled up to it's latest stable release v1.9
+Tiled should work with most if not all versions of Tiled up to it's latest stable release v1.9.
 You can also read what package supports your version of Tiled. But it's recommended that you use the lastest stable one.
 
 ---
 ### Contribution
-Feel free to open up an issue with your question or request. If you do plan to make modifications to the code please open up an issue first with more details about what you'd like to change and why. If you open a pull request, please use the develop branch as both source and target branch. The main branch is supposed to be production-ready and stable. I follow the GitFlow branching model and I ask you do too.
+Feel free to open up an issue or request any improvements to the project. If you have any plan to modify the code please open up an issue first with the details on what you would like to change. You may also currently do a pull request directly from the main branch as it is also still the development branch.
 
 ---
 ### License
