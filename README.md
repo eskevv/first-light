@@ -37,7 +37,7 @@ It's also possible to find any object in the given map using Linq, but FirstLigh
 have to cast it back to the type you are looking for. It offers similar methods for finding any object or layer by name, class or type.
 
 **Animated Tiles**
-> FirstLight does all the tile animationsfor you but can also provide the frame data if you wish to do all the updating.  
+> FirstLight does all the tile animations for you but can also provide the frame data if you wish to do all the updating.  
 > In the update loop you can call the map instance's ``Update`` that takes in how many seconds have passed(delta):  
 ```cs
 // this will update your game tiles and layer scrolling if it has any parallax effects
