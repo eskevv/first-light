@@ -34,7 +34,7 @@ PolygonObject branch = map.FindObject("Branch");
 ```
 
 **Animated Tiles**
-> FirstLight does all the tile animations by itself but can also provide the frame data if you wish to update them yourself.  
+> FirstLight does all the tile animations by itself but can also provide the frame data if you wish to do all the updating.  
 > After loading the map you can specify a fixed timestep for your animations:  
 ```cs
 map.SetTimeStep(60);
