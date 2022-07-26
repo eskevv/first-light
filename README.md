@@ -46,7 +46,7 @@ map.SetTimeStep(60);
 map.Update(time);
 
 // then in the draw call (varies by rendering methods):
-Draw(texture, tile.Position, tile.Source); // frame is incremented here
+Draw(texture, tile.Position, tile.Source);
 ```
 
 ---
