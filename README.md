@@ -49,6 +49,8 @@ Draw(texture, tilePosition, tileSource);
 
 ---
 ### Installation
+**Source code will usually be a bit more up to date**  
+
 Option 1: With Nuget Package Manager:  
 ```
 dotnet add package firstlight 
