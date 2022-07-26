@@ -49,20 +49,18 @@ Draw(texture, tilePosition, tileSource);
 
 ---
 ### Installation
-**Source code will usually be a bit more up to date**  
-
-Option 1: With Nuget Package Manager:  
+**Option 1**: With Nuget Package Manager:  
 ```
 dotnet add package firstlight 
 ```
-Option 2: Clone or download the repo into a dir of choice.
-Then add to your .csproj file in your own project:
+**Option 2**: (Source code will usually be a bit more up to date)  
+
+Clone or download the repo into a dir of choice and add to your .csproj file in your own project:
 ```xml
 <ItemGroup>
   <ProjectReference Include = "<path to FirstLight>\FirstLight.csproj" />
 </ItemGroup>
 ```
-
 ---
 ### Using FirstLight to Render all Tiles
 Initialize and configure your ```GameMap```:
