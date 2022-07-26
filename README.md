@@ -8,7 +8,7 @@ Since FirstLight is a standalone library, it doesn't rely on any external framew
 ensures that maps can be quickly displayed on the screen with minimal effort, and the API provides methods to be more felxible with how tiles are rendered.
 
 Note: It is up to you to store the actual textures, (preferably to cache them by tileset name). As a standalone library, FirstLight doesn't do any of the
-actual rendering, but provides an interface to all of the necessary tmx data.
+actual rendering, but provides an interface to all of the necessary tmx data. This versatility means you can use it with popular game engines like Unity3D, Godot, or CryEngine.
 
 **Tile Structure** 
 
@@ -95,3 +95,18 @@ foreach (var item in map.OrderedTiles)
 * Parallax factors
 * Opacity
 * Tile flipping
+
+---
+### Building And Version Support
+You need .NET 6 to start using First light as it was built with a more modern syntax that may not be suppored by earlier versions of C#.
+
+Tiled should work with most if not all versions of Tiled up to it's latest stable release v1.9
+You can also read what package supports your version of Tiled. But it's recommended that you use the lastest stable one.
+
+---
+### Contribution
+Feel free to open up an issue with your question or request. If you do plan to make modifications to the code please open up an issue first with more details about what you'd like to change and why. If you open a pull request, please use the develop branch as both source and target branch. The main branch is supposed to be production-ready and stable. I follow the GitFlow branching model and I ask you do too.
+
+---
+### License
+MIT
