@@ -52,7 +52,7 @@ Draw(texture, tile.Position, tile.Source);
 ---
 ### Installation
 1) With Nuget Package Manager:  
--this will automatically add the latest package to your project
+-automatically adds the latest package to your project
 ```
 dotnet add package firstlight 
 ```
@@ -60,32 +60,37 @@ dotnet add package firstlight
 Then add to your .csproj file in your own project:
 ```xml
 <ItemGroup>
-  <ProjectReference Include = "<path to FirstLight\FirstLight.csproj>" />
+  <ProjectReference Include = "<path to FirstLight>\FirstLight.csproj" />
 </ItemGroup>
 ```
 
 ---
 ### Using FirstLight to Render all Tiles
+Initialize and configure your ```GameMap```:
 ```cs
-// load the map 
-TileMap map = MapLoader.Load(filePath);
+// load the map
+GameMap map = MapLoader.Load(filePath);
 
 // disbale / enable layers (all are enabled by default)
 map.DisableLayers("background", "water", "trees");
 map.EnableLayers("water");
+```
+The ```Update``` loop:
+```cs
+// animations and parallax scrolling updates
+_map.Update(dt);
 
 // draw all tiles with filtering applied
 foreach (var item in map.OrderedTiles)
 {
   // pull data
-  var texture = GetTexture(item.ImageName);
-  var position = new PositionStruct(item.WorldPositionX, item.WorldPositionY);
-  var tileSrc = new RectStruct(item.SourceCoords.X, item.SourceCoords.Y, item.Width, item.Height);
-  
-  // draw the tile
-  Draw(texture, position, tileSrc);
-}
+  var texture = GetTexture(item.ImageName); // or where ever you you are storing your textures
+  var position = new PositionStruct(item.WorldPositionX, item.WorldPositionY); // example struct
+  var tileSrc = new RectStruct(item.SourceX, item.SourceY, item.Width, item.Height); // example struct
 
+  // draw the tile (very generic)
+  batch.Draw(texture, position, tileSrc);
+}
 ```
 
 ---
