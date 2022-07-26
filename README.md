@@ -33,30 +33,27 @@ PolygonObject branch = ground.FindByName("Branch");
 PolygonObject branch = map.FindObject("Branch");
 ```
 
+It's also possible to find any object in the given map using Linq, but FirstLight has the task of doing this so you won't
+have to cast it back to the type you are looking for. It offers similar methods for finding any object or layer by name, class or type.
+
 **Animated Tiles**
-> FirstLight does all the tile animations by itself but can also provide the frame data if you wish to do all the updating.  
-> After loading the map you can specify a fixed timestep for your animations:  
+> FirstLight does all the tile animations for you but can also provide the frame data if you wish to do all the updating.  
+> In the update loop you can call the map instance's ``Update`` that takes in how many seconds have passed(delta):  
 ```cs
-map.SetTimeStep(60);
-```
-> However this is inconsistent if you know your frame rate will vary and therefore only optional.  
-> Instead in your game ```update``` method:
-```cs
-// takes in a float that indicates how much time has passed
+// this will update your game tiles and layer scrolling if it has any parallax effects
 map.Update(time);
 
 // then in the draw call (varies by rendering methods):
-Draw(texture, tile.Position, tile.Source);
+Draw(texture, tilePosition, tileSource);
 ```
 
 ---
 ### Installation
-1) With Nuget Package Manager:  
--automatically adds the latest package to your project
+Option 1: With Nuget Package Manager:  
 ```
 dotnet add package firstlight 
 ```
-2) Clone or download the repo into a dir of choice.
+Option 2: Clone or download the repo into a dir of choice.
 Then add to your .csproj file in your own project:
 ```xml
 <ItemGroup>
@@ -88,7 +85,7 @@ foreach (var item in map.OrderedTiles)
   var position = new PositionStruct(item.WorldPositionX, item.WorldPositionY); // example struct
   var tileSrc = new RectStruct(item.SourceX, item.SourceY, item.Width, item.Height); // example struct
 
-  // draw the tile (very generic)
+  // draw the tile (very generic method here)
   batch.Draw(texture, position, tileSrc);
 }
 ```
