@@ -40,16 +40,18 @@ PolygonObject branch = map.FindObject("Branch");
 map.SetTimeStep(60);
 ```
 > However this is inconsistent if you know your frame rate will vary and therefore only optional.  
-> Instead in your game <code>update</code> method:
+> Instead in your game ```update``` method:
 ```cs
 // takes in a float that indicates how much time has passed
 map.Update(time);
 
 // then in the draw call (varies by rendering methods):
-Draw(texture, tile.Position, tile.Source);
+Draw(texture, tile.Position, tile.Source); // frame is incremented here
 ```
 > NOTE: All tiles have their frames automatically incremented each time the source coordinates are returned.  
 > -- this was done to keep things simple as a full mapping system and take the animating task away from the user.  
+> If you wish to access the data without changing the state of the tile, you can get around this by instead using  
+> the ```GetFrames``` property, which returns a list of Coordinates for each frame of animation.
 
 
 ---
