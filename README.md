@@ -85,7 +85,7 @@ foreach (var item in map.OrderedTiles)
   var position = new PositionStruct(item.WorldPositionX, item.WorldPositionY); // example struct
   var tileSrc = new RectStruct(item.SourceX, item.SourceY, item.Width, item.Height); // example struct
 
-  // draw the tile (very generic)
+  // draw the tile (very generic method here)
   batch.Draw(texture, position, tileSrc);
 }
 ```
