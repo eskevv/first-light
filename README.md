@@ -34,7 +34,7 @@ PolygonObject branch = map.FindObject("Branch");
 ```
 
 **Animated Tiles**
-> FirstLight offers all the animation data you will need right from the start.  
+> FirstLight does all the tile animations by itself but can also provide the frame data if you wish to update them yourself.  
 > After loading the map you can specify a fixed timestep for your animations:  
 ```cs
 map.SetTimeStep(60);
@@ -51,9 +51,10 @@ Draw(texture, tile.Position, tile.Source);
 
 ---
 ### Installation
-1) With Nuget Package Manager:
+1) With Nuget Package Manager:  
+-this will automatically add the latest package to your project
 ```
-dotnet add package firstlight
+dotnet add package firstlight 
 ```
 2) Clone or download the repo into a dir of choice.
 Then add to your .csproj file in your own project:
