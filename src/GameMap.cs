@@ -33,6 +33,8 @@ public class GameMap
       OrderedTiles = LoadTiles();
    }
 
+   ///<summary>Updates the map by by the given time.</summary>
+   ///<param name="time">The time in seconds that has passed. Note: this value is utomatically converted into to ms for frame animations.</param>
    public void Update(float time)
    {
       TimePassed = time;

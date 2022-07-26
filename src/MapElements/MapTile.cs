@@ -18,11 +18,11 @@ public class MapTile : MapElement
    /// <summary>The y coordinate of the image in pixels this tile is rendered from.</summary>
    public int SourceY => GetImageSourceY();
 
-   private readonly int _originalSourceX;
-   private readonly int _originalSourceY;
-
    private int _currentFrame;
    private float _frameTime;
+
+   private readonly int _originalSourceX;
+   private readonly int _originalSourceY;
    private readonly GameMap _world;
    private readonly Coordinates[]? AnimationPoints;
    private readonly int[]? FrameDurations;
@@ -70,10 +70,12 @@ public class MapTile : MapElement
       return (int)AnimationPoints[_currentFrame].Y;
    }
 
+
+   /// <summary>The update method called by GameMap. You should not have to call this yourself.</summary>
    public void Update()
    {
       if (AnimationPoints == null || FrameDurations == null) return;
-      _frameTime += _world.TimePassed;
+      _frameTime += _world.TimePassed * 1000;
 
       if (_frameTime < FrameDurations[_currentFrame]) return;
       _currentFrame++;
