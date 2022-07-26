@@ -34,19 +34,14 @@ PolygonObject branch = map.FindObject("Branch");
 ```
 
 **Animated Tiles**
-> FirstLight does all the tile animations by itself but can also provide the frame data if you wish to do all the updating.  
-> After loading the map you can specify a fixed timestep for your animations:  
+> FirstLight does all the tile animationsfor you but can also provide the frame data if you wish to do all the updating.  
+> In the update loop you can call the map instance's ``Update`` that takes in how many seconds have passed(delta):  
 ```cs
-map.SetTimeStep(60);
-```
-> However this is inconsistent if you know your frame rate will vary and therefore only optional.  
-> Instead in your game ```update``` method:
-```cs
-// takes in a float that indicates how much time has passed
+// this will update your game tiles and layer scrolling if it has any parallax effects
 map.Update(time);
 
 // then in the draw call (varies by rendering methods):
-Draw(texture, tile.Position, tile.Source);
+Draw(texture, tilePosition, tileSource);
 ```
 
 ---
