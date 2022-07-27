@@ -3,7 +3,7 @@ using FirstLight.Utils;
 using System.Xml.Linq;
 namespace FirstLight.Loaders;
 
-public class TsxLoader
+public static class TsxLoader
 {
    public static TiledTileset LoadTsx(string filePath)
    {

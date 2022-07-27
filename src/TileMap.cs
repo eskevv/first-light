@@ -34,7 +34,10 @@ public class TileMap
       _tilesets = tilesets;
    }
 
-   public KeyValuePair<int, TiledTileset>? GetTilesetPair(int gid)
+   /// <summary>Gets the Key, Value pair in { FirstGid, Tileset } format.</summary>
+   /// <param name="gid">The tile gid you are searching with.</param>
+   /// <returns>If the tileset doesn't exist this returns a KeyValue pair of { -1, null }.</returns>
+   public KeyValuePair<int, TiledTileset?> GetTilesetPair(int gid)
    {
       var firstGids = _tilesets.Keys;
       for (int x = 0; x < firstGids.Count; x++)
@@ -44,7 +47,7 @@ public class TileMap
 
          if (x == firstGids.Count - 1)
          {
-            return new KeyValuePair<int, TiledTileset>(key, value);
+            return new KeyValuePair<int, TiledTileset?>(key, value);
          }
 
          int gid1 = firstGids.ElementAt(x + 0);
@@ -52,10 +55,25 @@ public class TileMap
 
          if (gid >= gid1 && gid < gid2)
          {
-            return new KeyValuePair<int, TiledTileset>(key, value);
+            return new KeyValuePair<int, TiledTileset?>(key, value);
          }
       }
 
-      return null;
+      return new KeyValuePair<int, TiledTileset?>(-1, null);
+   }
+
+   /// <summary>Gets a LightTile with all the basic tile information.</summary>
+   /// <param name="tileGid">The gid for the tile as found inside of the layer data.</param>
+   /// <param name="mapIteration">The linear tile location when looping through every tile in the layer.</param>
+   /// <param name="layerColumns">The total columns found in the layer.</param>
+   public LightTile? GetTileData(int tileGid, int mapIteration, int layerColumns)
+   {
+      TiledTileset? tileset = GetTilesetPair(tileGid).Value;
+      int firstGid = GetTilesetPair(tileGid).Key;
+
+      if (tileset == null) return null;
+      
+      int tileId = tileGid = firstGid;
+      return new LightTile(tileId, tileset, mapIteration, layerColumns);
    }
 }

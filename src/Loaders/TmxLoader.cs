@@ -3,7 +3,7 @@ using FirstLight.Utils;
 using System.Xml.Linq;
 namespace FirstLight.Loaders;
 
-public class TmxLoader
+public static class TmxLoader
 {
    public static TiledMap LoadTmx(string filePath)
    {

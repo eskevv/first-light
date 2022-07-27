@@ -1,4 +1,5 @@
-namespace FirstLight.TiledModels;
+using FirstLight.TiledModels;
+namespace FirstLight;
 
 public class TiledObjectGroup
 {
