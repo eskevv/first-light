@@ -13,7 +13,7 @@
     <Authors>eskevv</Authors>
     <Company>eskevv</Company>
     <Copyright>eskevv 2022</Copyright>
-    <PackageDescription>C# library for fully automating map tiles from Tiled's tmx and tsx formats.</PackageDescription>
+    <PackageDescription>C# library for fully parsing and loading Tiled maps and tilesets.</PackageDescription>
     <PackageProjectUrl>https://github.com/eskevv/FirstLight</PackageProjectUrl>
     <RepositoryUrl>https://github.com/eskevv/FirstLight</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

@@ -3,264 +3,256 @@ using FirstLight.TiledModels;
 using FirstLight.Utils;
 namespace FirstLight;
 
-public static class MapLoader
+public static class TiledParser
 {
-   static void Main(string[] args) { }
-
-   public static GameMap Load(string filePath)
+   static void Main(string[] args)
    {
+      // Load("../MonoStone/content/maps/map.tmx");
+   }
+
+   public static void Load(string filePath)
+   {
+      if (!File.Exists(filePath)) throw new FirstLightException($"{filePath} not found.");
+
+      if (!filePath.EndsWith(".tmx")) throw new FirstLightException("Unsupported file format");
+
       XDocument tmxMap = XDocument.Load(filePath);
+      XElement? mapRoot = tmxMap.Element("map");
 
-      XElement? mapElement = tmxMap.Element("map");
-      if (mapElement == null) throw new FirstLightException("XDocument could not find root element: map");
+      if (mapRoot == null) throw new FirstLightException("This tmx file is not parseable.");
 
-      TiledProperty[] mapProperties = ParseRootProperties(mapElement);
-      List<TiledLayer> mapLayers = CreateLayers(mapElement);
-      List<TiledTileset> mapTilesets = CreateTilesets(mapElement, filePath);
-      List<TiledObjectGroup> mapObjectGroups = CreateObjectGroups(mapElement);
-
-      var tiledMap = new TiledMap(mapProperties, mapLayers, mapObjectGroups, mapTilesets);
-      return new GameMap(tiledMap);
+      ParseMap(mapRoot);
    }
 
-   // --Attribute Parsers
-
-   private static TiledProperty[] ParseRootProperties(XElement element)
+   private static void ParseMap(XElement mapRoot)
    {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "version", "string"));
-      properties.Add(ConstructTiledProperty(element, "tiledversion", "string"));
-      properties.Add(ConstructTiledProperty(element, "orientation", "string"));
-      properties.Add(ConstructTiledProperty(element, "renderorder", "string"));
-      properties.Add(ConstructTiledProperty(element, "width", "int"));
-      properties.Add(ConstructTiledProperty(element, "height", "int"));
-      properties.Add(ConstructTiledProperty(element, "tilewidth", "int"));
-      properties.Add(ConstructTiledProperty(element, "tileheight", "int"));
-      properties.Add(ConstructTiledProperty(element, "infinite", "int"));
-      return properties.ToArray();
-   }
+      XElement? properties = mapRoot.Element("properties");
+      IEnumerable<XElement> tilesets = mapRoot.Elements("tileset");
+      IEnumerable<XElement> tileLayers = mapRoot.Elements("layer");
+      IEnumerable<XElement> imagelayers = mapRoot.Elements("imagelayer");
+      IEnumerable<XElement> objectgroups = mapRoot.Elements("objectgroup");
 
-   private static TiledProperty[] ParseLayerProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "name", "string"));
-      properties.Add(ConstructTiledProperty(element, "width", "int"));
-      properties.Add(ConstructTiledProperty(element, "height", "int"));
-      return properties.ToArray();
-   }
+      var tiledMap = new TiledMap();
+      tiledMap.Width = int.Parse(mapRoot.Attribute("width")?.Value ?? "0");
+      tiledMap.Height = int.Parse(mapRoot.Attribute("height")?.Value ?? "0");
+      tiledMap.TileWidth = int.Parse(mapRoot.Attribute("tilewidth")?.Value ?? "0");
+      tiledMap.TileHeight = int.Parse(mapRoot.Attribute("tileheight")?.Value ?? "0");
+      tiledMap.Version = mapRoot.Attribute("version")?.Value;
+      tiledMap.TiledVersion = mapRoot.Attribute("tiledversion")?.Value;
+      tiledMap.Orientation = mapRoot.Attribute("orientation")?.Value;
+      tiledMap.RenderOrder = mapRoot.Attribute("renderorder")?.Value;
+      tiledMap.Infinite = (mapRoot.Attribute("infinite")?.Value == "1");
+      tiledMap.Class = mapRoot.Attribute("class")?.Value;
+      tiledMap.ParallaxOriginX = int.Parse(mapRoot.Attribute("parallaxoriginx")?.Value ?? "0");
+      tiledMap.ParallaxOriginY = int.Parse(mapRoot.Attribute("parallaxoriginy")?.Value ?? "0");
+      tiledMap.Tilesets = ParseMapTilesets(tilesets);
+      tiledMap.TileLayers = ParseTileLayers(tileLayers);
+      tiledMap.ImageLayers = ParseImageLayers(imagelayers);
+      tiledMap.ObjectGroups = ParseObjectGroups(objectgroups);
 
-   private static TiledProperty[] ParseObjectProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructObjectProperty(element, "x", "float"));
-      properties.Add(ConstructObjectProperty(element, "y", "float"));
-      properties.Add(ConstructObjectProperty(element, "width", "float"));
-      properties.Add(ConstructObjectProperty(element, "height", "float"));
-      properties.Add(ConstructObjectProperty(element, "rotation", "float"));
-      properties.Add(ConstructObjectProperty(element, "name", "string"));
-      properties.Add(ConstructObjectProperty(element, "class", "string"));
-      return properties.ToArray();
-   }
-
-   private static TiledProperty[] ParseObjectGroupProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "name", "string"));
-      return properties.ToArray();
-   }
-
-   private static TiledProperty[] ParseTmxTilesetProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "firstgid", "int"));
-      properties.Add(ConstructTiledProperty(element, "source", "string"));
-      return properties.ToArray();
-   }
-
-   private static TiledProperty[] ParseTsxTilesetProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "name", "string"));
-      properties.Add(ConstructTiledProperty(element, "tilewidth", "int"));
-      properties.Add(ConstructTiledProperty(element, "tileheight", "int"));
-      properties.Add(ConstructTiledProperty(element, "tilecount", "int"));
-      properties.Add(ConstructTiledProperty(element, "columns", "int"));
-      return properties.ToArray();
-   }
-
-   private static TiledProperty[] ParseImageProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "source", "string"));
-      properties.Add(ConstructTiledProperty(element, "width", "int"));
-      properties.Add(ConstructTiledProperty(element, "height", "int"));
-      return properties.ToArray();
-   }
-
-   private static TiledProperty[] ParseFrameProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "tileid", "int"));
-      properties.Add(ConstructTiledProperty(element, "duration", "int"));
-      return properties.ToArray();
-   }
-
-   private static TiledProperty[] ParseAnimationProperties(XElement element)
-   {
-      var properties = new List<TiledProperty>();
-      properties.Add(ConstructTiledProperty(element, "id", "int"));
-      return properties.ToArray();
-   }
-
-   // --Model Factories
-
-   private static List<TiledLayer> CreateLayers(XElement element)
-   {
-      var tiledLayers = new List<TiledLayer>();
-      IEnumerable<XElement> layers = element.Elements("layer");
-      foreach (var item in layers)
+      if (properties != null)
       {
-         TiledProperty[] properties = ParseLayerProperties(item);
-         string? data = item.Element("data")?.Value;
-         int[] gids = Helpers.EnsureString(data).ToIntArray();
-         tiledLayers.Add(new TiledLayer(properties, gids));
+         TiledProperty[] customProperties = ParseCustomProperties(properties.Elements("property"));
+         tiledMap.CustomProperties = customProperties;
       }
-      return tiledLayers;
    }
 
-   private static List<TiledTileset> CreateTilesets(XElement element, string rootPath)
+   // Tiled
+
+   private static TiledObjectGroup[] ParseObjectGroups(IEnumerable<XElement> nodes)
    {
-      var tilesets = new List<TiledTileset>();
-      IEnumerable<XElement> elements = element.Elements("tileset");
-      foreach (var item in elements)
+      var output = new List<TiledObjectGroup>();
+      foreach (var item in nodes)
       {
-         string? tsxSource = item.Attribute("source")?.Value;
-         string fullPath = Helpers.EnsureString(tsxSource).CombineWithPath(rootPath);
-         XDocument tsxFile = XDocument.Load(fullPath);
-         XElement? tsxElement = tsxFile.Element("tileset");
-         if (tsxElement == null) throw new FirstLightException("File does not contain a tileset tag.");
+         XElement? properties = item.Element("properties");
+         IEnumerable<XElement> objectElements = item.Elements("object");
+         var objectGroup = new TiledObjectGroup();
+         objectGroup.Id = int.Parse(item.Attribute("id")?.Value ?? "0");
+         objectGroup.OffsetX = float.Parse(item.Attribute("offsetx")?.Value ?? "0");
+         objectGroup.OffsetY = float.Parse(item.Attribute("offsety")?.Value ?? "0");
+         objectGroup.ParallaxX = float.Parse(item.Attribute("parallaxx")?.Value ?? "0");
+         objectGroup.ParallaxY = float.Parse(item.Attribute("parallaxy")?.Value ?? "0");
+         objectGroup.Name = item.Attribute("name")?.Value;
+         objectGroup.Class = item.Attribute("class")?.Value;
+         objectGroup.Objects = ParseObjects(objectElements);
 
-         TiledProperty[] tmxProperties = ParseTmxTilesetProperties(item);
-         TiledProperty[] tsxProperties = ParseTsxTilesetProperties(tsxElement);
-         TiledImage image = CreateTiledImage(tsxElement);
-         List<TiledAnimation> animations = CreateTiledAnimations(tsxElement);
-
-         var properties = Helpers.CombineArrays<TiledProperty>(tmxProperties, tsxProperties);
-         tilesets.Add(new TiledTileset(properties, image, animations));
-      }
-      return tilesets;
-   }
-
-   private static List<TiledObjectGroup> CreateObjectGroups(XElement element)
-   {
-      var tiledObjectGroups = new List<TiledObjectGroup>();
-      IEnumerable<XElement> objectGroups = element.Elements("objectgroup");
-      foreach (var item in objectGroups)
-      {
-         TiledProperty[] properties = ParseObjectGroupProperties(item);
-         List<TiledObject> objects = CreateObjects(item);
-         tiledObjectGroups.Add(new TiledObjectGroup(properties, objects));
-      }
-      return tiledObjectGroups;
-   }
-
-   private static List<TiledObject> CreateObjects(XElement element)
-   {
-      var tiledObjects = new List<TiledObject>();
-      IEnumerable<XElement> objects = element.Elements("object");
-      foreach (var item in objects)
-      {
-         TiledProperty[] properties = ParseObjectProperties(item);
-         if (!item.HasElements)
+         if (properties != null)
          {
-            if (item.Attribute("width") == null && item.Attribute("height") == null)
-            {
-               tiledObjects.Add(new TiledObject(properties, ShapeType.Point));
-               continue;
-            }
-            tiledObjects.Add(new TiledObject(properties, ShapeType.Rectangle));
-            continue;
+            objectGroup.CustomProperties = ParseCustomProperties(properties.Elements("property"));
          }
+         output.Add(objectGroup);
+      }
+      return output.ToArray();
+   }
+
+   private static TiledObject[]? ParseObjects(IEnumerable<XElement> nodes)
+   {
+      if (nodes.Count() == 0) return null;
+
+      var output = new List<TiledObject>();
+      foreach (var item in nodes)
+      {
+         XElement? properties = item.Element("properties");
          XElement? ellipse = item.Element("ellipse");
          XElement? polygon = item.Element("polygon");
-         if (polygon != null)
-         {
-            tiledObjects.Add(new TiledObject(properties, ShapeType.Polygon, GetPolygonPoints(polygon)));
-         }
+         var shapeObject = new TiledObject();
+         shapeObject.Id = int.Parse(item.Attribute("id")?.Value ?? "0");
+         shapeObject.X = float.Parse(item.Attribute("x")?.Value ?? "0");
+         shapeObject.Y = float.Parse(item.Attribute("y")?.Value ?? "0");
+         shapeObject.Width = float.Parse(item.Attribute("width")?.Value ?? "0");
+         shapeObject.Height = float.Parse(item.Attribute("height")?.Value ?? "0");
+         shapeObject.Rotation = float.Parse(item.Attribute("rotation")?.Value ?? "0");
+         shapeObject.Name = item.Attribute("name")?.Value;
+         shapeObject.Class = item.Attribute("class")?.Value;
+
          if (ellipse != null)
          {
-            tiledObjects.Add(new TiledObject(properties, ShapeType.Ellipse));
+            shapeObject.Type = TiledShapeType.Ellipse;
+         }
+         if (polygon != null)
+         {
+            shapeObject.Type = TiledShapeType.Polygon;
+            shapeObject.Points = ParsePolygonPoints(polygon);
+         }
+         if (properties != null)
+         {
+            shapeObject.CustomProperties = ParseCustomProperties(properties.Elements("property"));
          }
       }
-      return tiledObjects;
+      return output.ToArray();
    }
 
-   private static float[] GetPolygonPoints(XElement polygon)
+   private static FloatCoords[] ParsePolygonPoints(XElement node)
    {
-      var points = new List<float>();
-
-      string? value = polygon.Attribute("points")?.Value;
-      if (value == null) throw new FirstLightException("Polygon does not contain the required attribute 'points'.");
-      string[]? coordinates = value.Split(' ');
-
-      foreach (var item in coordinates)
+      var output = new List<FloatCoords>();
+      string value = node.Attribute("points")?.Value ?? "0";
+      string[] points = value.Split(' ');
+      foreach (var item in points)
       {
-         string[] coords = item.Split(',');
-         points.Add(float.Parse(coords[0]));
-         points.Add(float.Parse(coords[1]));
+         float pointX = float.Parse(item.Split(',')[0]);
+         float pointY = float.Parse(item.Split(',')[1]);
+         var point = new FloatCoords(pointX, pointY);
+         output.Add(point);
       }
-
-      return points.ToArray();
+      return output.ToArray();
    }
 
-   private static TiledImage CreateTiledImage(XElement element)
-   {
-      XElement? image = element.Element("image");
-      if (image == null) throw new FirstLightException("There is no image associated with the tileset.");
-      TiledProperty[] properties = ParseImageProperties(image);
-      return new TiledImage(properties);
-   }
+   // TiledMapTilesets
 
-   private static List<TiledAnimation> CreateTiledAnimations(XElement element)
+   private static TiledMapTileset[] ParseMapTilesets(IEnumerable<XElement> nodes)
    {
-      var tiledAnimations = new List<TiledAnimation>();
-      IEnumerable<XElement> animations = element.Elements("tile");
-      foreach (var item in animations)
+      var output = new List<TiledMapTileset>();
+      foreach (var item in nodes)
       {
-         XElement? animationElement = item.Element("animation");
-         if (animationElement == null) continue;
-
-         TiledProperty[] properties = ParseAnimationProperties(item);
-         List<TiledFrame> frames = CreateTiledFrames(animationElement);
-         tiledAnimations.Add(new TiledAnimation(properties, frames));
+         var tileset = new TiledMapTileset();
+         tileset.FirstGid = int.Parse(item.Attribute("firstgid")?.Value ?? "0");
+         tileset.Source = item.Attribute("source")?.Value;
+         output.Add(tileset);
       }
-      return tiledAnimations;
+      return output.ToArray();
    }
 
-   private static List<TiledFrame> CreateTiledFrames(XElement element)
+   // TiledImageLayers
+
+   private static TiledImageLayer[] ParseImageLayers(IEnumerable<XElement> nodes)
    {
-      var tiledFrames = new List<TiledFrame>();
-      IEnumerable<XElement> frames = element.Elements("frame");
-      foreach (var item in frames)
+      var output = new List<TiledImageLayer>();
+      foreach (var item in nodes)
       {
-         TiledProperty[] properties = ParseFrameProperties(item);
-         tiledFrames.Add(new TiledFrame(properties));
+         var imageLayer = new TiledImageLayer();
+         XElement? properties = item.Element("properties");
+         imageLayer.Id = int.Parse(item.Attribute("id")?.Value ?? "0");
+         imageLayer.OffsetX = float.Parse(item.Attribute("offsetx")?.Value ?? "0");
+         imageLayer.OffsetY = float.Parse(item.Attribute("offsety")?.Value ?? "0");
+         imageLayer.ParallaxX = float.Parse(item.Attribute("parallaxx")?.Value ?? "0");
+         imageLayer.ParallaxY = float.Parse(item.Attribute("parallaxy")?.Value ?? "0");
+         imageLayer.Name = item.Attribute("name")?.Value;
+         imageLayer.Class = item.Attribute("class")?.Value;
+
+         if (properties != null)
+         {
+            imageLayer.CustomProperties = ParseCustomProperties(properties.Elements("property"));
+         }
+
+         output.Add(imageLayer);
       }
-      return tiledFrames;
+      return output.ToArray();
    }
 
-   // --Helpers
+   // TiledTileLayers
 
-   private static TiledProperty ConstructTiledProperty(XElement element, string name, string type)
+   public static TiledTileLayer[] ParseTileLayers(IEnumerable<XElement> nodes)
    {
-      string? value = element.Attribute(name)?.Value;
-      if (value == null) throw new FirstLightException($"Attribute {name} was not found");
-      return new TiledProperty(name, type, value);
+      var output = new List<TiledTileLayer>();
+      foreach (var item in nodes)
+      {
+         XElement? properties = item.Element("properties");
+         XElement? data = item.Element("data");
+         var layer = new TiledTileLayer();
+         layer.Id = int.Parse(item.Attribute("id")?.Value ?? "0");
+         layer.Width = int.Parse(item.Attribute("width")?.Value ?? "0");
+         layer.Height = int.Parse(item.Attribute("height")?.Value ?? "0");
+         layer.OffsetX = float.Parse(item.Attribute("offsetx")?.Value ?? "0");
+         layer.OffsetY = float.Parse(item.Attribute("offsety")?.Value ?? "0");
+         layer.ParallaxX = float.Parse(item.Attribute("parallaxx")?.Value ?? "0");
+         layer.ParallaxY = float.Parse(item.Attribute("parallaxy")?.Value ?? "0");
+         layer.Name = item.Attribute("name")?.Value;
+         layer.Class = item.Attribute("class")?.Value;
+
+         if (data != null)
+         {
+            layer.LayerData = ParseLayerData(data);
+         }
+         if (properties != null)
+         {
+            layer.CustomProperties = ParseCustomProperties(properties.Elements("property"));
+         }
+         output.Add(layer);
+      }
+      return output.ToArray();
    }
 
-   private static TiledProperty ConstructObjectProperty(XElement element, string name, string type)
+   private static TiledLayerData ParseLayerData(XElement node)
    {
-      string value = element.Attribute(name)?.Value ?? "-1";
-      return new TiledProperty(name, type, value);
+      string? gids = node.Value;
+      IEnumerable<XElement> nodes = node.Elements("chunk");
+      var output = new TiledLayerData();
+      output.Gids = gids.ToIntArray();
+      output.Chunks = ParseChunkData(nodes);
+      return output;
+   }
+
+   private static TiledChunk[]? ParseChunkData(IEnumerable<XElement> nodes)
+   {
+      if (nodes.Count() == 0) return null;
+
+      var output = new List<TiledChunk>();
+      foreach (var item in nodes)
+      {
+         var chunk = new TiledChunk();
+         chunk.X = int.Parse(item.Attribute("x")?.Value ?? "0");
+         chunk.Y = int.Parse(item.Attribute("y")?.Value ?? "0");
+         chunk.Width = int.Parse(item.Attribute("width")?.Value ?? "0");
+         chunk.Height = int.Parse(item.Attribute("height")?.Value ?? "0");
+         chunk.Data = item.Value.ToIntArray();
+         output.Add(chunk);
+      }
+      return output.ToArray();
+   }
+
+   // CustomProperties
+
+   private static TiledProperty[] ParseCustomProperties(IEnumerable<XElement> nodes)
+   {
+      var output = new List<TiledProperty>();
+      foreach (var item in nodes)
+      {
+         var property = new TiledProperty();
+         property.Name = item.Attribute("name")?.Value;
+         property.Type = item.Attribute("type")?.Value;
+         property.Value = item.Attribute("value")?.Value;
+         output.Add(property);
+      }
+      return output.ToArray();
    }
 }
