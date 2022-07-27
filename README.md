@@ -21,8 +21,6 @@ actual rendering, but provides an interface to all of the necessary tmx data. Th
 > * Animation data
 
 **Working with Layers**  
-> Layers provide indexing into tiles and can be toggled on and off
-> * Hand pick tile, image, and object layers with generic methods
 
 Finding most data throughout the ```TileMap``` instance  is best done with Linq.  
 Example of finding all objects under a class for specific layers:
