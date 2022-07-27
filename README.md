@@ -89,14 +89,6 @@ foreach (var item in map.OrderedTiles)
   batch.Draw(texture, position, tileSrc);
 }
 ```
-
----
-### Features Not Implemented Yet (Soon)
-* Parallax factors
-* Opacity
-* Tile flipping
-* Infinite maps
-
 ---
 ### Building And Version Support
 You need .NET 6 to start using First light as it was built with a more modern syntax that may not be suppored by earlier versions of C#.
