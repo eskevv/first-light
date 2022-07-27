@@ -10,19 +10,19 @@ public class TiledTileset
    public int TileHeight;
    public int TileCount;
    public int Columns;
-   public TilesetImage? Image;
-   public TilesetAnimations[]? Animations;
+   public TiledImage? Image;
+   public TiledAnimation[]? Animations;
    public TiledProperty[]? CustomProperties;
 }
 
-public class TilesetImage
+public class TiledImage
 {
    public string? Source;
    public int Width;
    public int Height;
 }
 
-public class TilesetAnimations
+public class TiledAnimation
 {
    public int Id;
    public TiledFrame[]? Frames;

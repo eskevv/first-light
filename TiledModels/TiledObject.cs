@@ -17,6 +17,7 @@ public class TiledObject
 
 public enum TiledShapeType
 {
+   Unknown,
    Point,
    Rectangle,
    Ellipse,

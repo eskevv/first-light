@@ -3,29 +3,121 @@ using FirstLight.TiledModels;
 using FirstLight.Utils;
 namespace FirstLight;
 
-public static class TiledParser
+public class TiledLoader
 {
-   static void Main(string[] args)
+   public TiledMap Map;
+   public Dictionary<int, TiledTileset> Tilesets;
+
+   public TiledLoader()
    {
-      // Load("../MonoStone/content/maps/map.tmx");
+      Tilesets = new Dictionary<int, TiledTileset>();
+      Map = new TiledMap();
    }
 
-   public static void Load(string filePath)
+   public void Load(string filePath)
    {
       if (!File.Exists(filePath)) throw new FirstLightException($"{filePath} not found.");
 
       if (!filePath.EndsWith(".tmx")) throw new FirstLightException("Unsupported file format");
 
-      XDocument tmxMap = XDocument.Load(filePath);
-      XElement? mapRoot = tmxMap.Element("map");
-
-      if (mapRoot == null) throw new FirstLightException("This tmx file is not parseable.");
-
-      ParseMap(mapRoot);
+      XDocument tmxDocument = XDocument.Load(filePath);
+      
+      ParseMap(tmxDocument);
+      ParseTilesets(Map.Tilesets);
    }
 
-   private static void ParseMap(XElement mapRoot)
+   private void ParseTilesets(TiledMapTileset[]? mapTilesets)
    {
+      if (mapTilesets == null) return;
+
+      foreach (var item in mapTilesets)
+      {
+         int firstGid = item.FirstGid;
+         string? source = item.Source ?? "0";
+         Tilesets[firstGid] = ParseTileset(source);
+      }
+   }
+
+   private TiledTileset ParseTileset(string filePath)
+   {
+      if (!File.Exists(filePath)) throw new FirstLightException($"{filePath} not found.");
+
+      if (!filePath.EndsWith(".tsx")) throw new FirstLightException("Unsupported file format");
+
+      XDocument tsxDocument = XDocument.Load(filePath);
+      XElement? tilesetRoot = tsxDocument.Element("tileset");
+
+      if (tilesetRoot == null) throw new FirstLightException("This tsx file is not parseable.");
+
+      XElement? properties  = tilesetRoot.Element("properties");
+      IEnumerable<XElement> tiles  = tilesetRoot.Elements("tile");
+      var tileset  = new TiledTileset();
+      tileset.Name = tilesetRoot.Attribute("name")?.Value;
+      tileset.Class = tilesetRoot.Attribute("class")?.Value;
+      tileset.Version = tilesetRoot.Attribute("version")?.Value;
+      tileset.TiledVersion = tilesetRoot.Attribute("tiledversion")?.Value;
+      tileset.TileWidth = int.Parse(tilesetRoot.Attribute("tilewidth")?.Value ?? "0");
+      tileset.TileHeight = int.Parse(tilesetRoot.Attribute("tileheight")?.Value ?? "0");
+      tileset.TileCount = int.Parse(tilesetRoot.Attribute("tilecount")?.Value ?? "0");
+      tileset.Columns = int.Parse(tilesetRoot.Attribute("columns")?.Value ?? "0");
+      tileset.Image = ParseTiledimage(tilesetRoot);
+      tileset.Animations = ParseTiledAnimations(tiles);
+
+      if (properties != null)
+      {
+         tileset.CustomProperties = ParseCustomProperties(properties.Elements("property"));
+      }
+
+      return tileset;
+   }  
+
+   private TiledAnimation[]? ParseTiledAnimations(IEnumerable<XElement> nodes)
+   {
+      if (nodes.Count() == 0) return null;
+      var output = new List<TiledAnimation>();
+
+      foreach (var item in nodes)
+      {
+         XElement? animationElement = item.Element("animation");
+         if (animationElement == null) throw new FirstLightException("Tileset animation does not specify animation tag.");
+         TiledAnimation animation = new TiledAnimation();
+         animation.Frames = ParseFrames(animationElement.Elements("frame"));
+         animation.Id = int.Parse(item.Attribute("id")?.Value ?? "0");
+         output.Add(animation);
+      }
+      return output.ToArray();
+   }
+
+   private TiledFrame[] ParseFrames(IEnumerable<XElement> nodes)
+   {
+      var output = new List<TiledFrame>();
+      foreach (var item in nodes)
+      {
+         var frame = new TiledFrame();
+         frame.TiledId = int.Parse(item.Attribute("tileid")?.Value ?? "0");
+         frame.Duration = int.Parse(item.Attribute("duration")?.Value ?? "0");
+         output.Add(frame);
+      }
+
+      return output.ToArray();
+   }
+
+   private TiledImage ParseTiledimage(XElement element)
+   {
+      var output = new TiledImage();
+      output.Source = element.Attribute("source")?.Value;
+      output.Width = int.Parse(element.Attribute("width")?.Value ?? "0");
+      output.Height = int.Parse(element.Attribute("height")?.Value ?? "0");
+      return output;
+   }
+
+   #region TmxFile
+
+   private void ParseMap(XDocument document)
+   {
+      XElement? mapRoot = document.Element("map");
+      if (mapRoot == null) throw new FirstLightException("This tmx file is not parseable.");
+
       XElement? properties = mapRoot.Element("properties");
       IEnumerable<XElement> tilesets = mapRoot.Elements("tileset");
       IEnumerable<XElement> tileLayers = mapRoot.Elements("layer");
@@ -52,14 +144,30 @@ public static class TiledParser
 
       if (properties != null)
       {
-         TiledProperty[] customProperties = ParseCustomProperties(properties.Elements("property"));
-         tiledMap.CustomProperties = customProperties;
+         tiledMap.CustomProperties = ParseCustomProperties(properties.Elements("property"));
       }
+
+      Map = tiledMap;
    }
 
-   // Tiled
+   // Tilesets
 
-   private static TiledObjectGroup[] ParseObjectGroups(IEnumerable<XElement> nodes)
+   private TiledMapTileset[] ParseMapTilesets(IEnumerable<XElement> nodes)
+   {
+      var output = new List<TiledMapTileset>();
+      foreach (var item in nodes)
+      {
+         var tileset = new TiledMapTileset();
+         tileset.FirstGid = int.Parse(item.Attribute("firstgid")?.Value ?? "0");
+         tileset.Source = item.Attribute("source")?.Value;
+         output.Add(tileset);
+      }
+      return output.ToArray();
+   }
+
+   // Objects
+
+   private TiledObjectGroup[] ParseObjectGroups(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledObjectGroup>();
       foreach (var item in nodes)
@@ -85,7 +193,7 @@ public static class TiledParser
       return output.ToArray();
    }
 
-   private static TiledObject[]? ParseObjects(IEnumerable<XElement> nodes)
+   private TiledObject[]? ParseObjects(IEnumerable<XElement> nodes)
    {
       if (nodes.Count() == 0) return null;
 
@@ -122,7 +230,7 @@ public static class TiledParser
       return output.ToArray();
    }
 
-   private static FloatCoords[] ParsePolygonPoints(XElement node)
+   private FloatCoords[] ParsePolygonPoints(XElement node)
    {
       var output = new List<FloatCoords>();
       string value = node.Attribute("points")?.Value ?? "0";
@@ -137,24 +245,9 @@ public static class TiledParser
       return output.ToArray();
    }
 
-   // TiledMapTilesets
+   // ImageLayers
 
-   private static TiledMapTileset[] ParseMapTilesets(IEnumerable<XElement> nodes)
-   {
-      var output = new List<TiledMapTileset>();
-      foreach (var item in nodes)
-      {
-         var tileset = new TiledMapTileset();
-         tileset.FirstGid = int.Parse(item.Attribute("firstgid")?.Value ?? "0");
-         tileset.Source = item.Attribute("source")?.Value;
-         output.Add(tileset);
-      }
-      return output.ToArray();
-   }
-
-   // TiledImageLayers
-
-   private static TiledImageLayer[] ParseImageLayers(IEnumerable<XElement> nodes)
+   private TiledImageLayer[] ParseImageLayers(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledImageLayer>();
       foreach (var item in nodes)
@@ -179,9 +272,9 @@ public static class TiledParser
       return output.ToArray();
    }
 
-   // TiledTileLayers
+   // TileLayers
 
-   public static TiledTileLayer[] ParseTileLayers(IEnumerable<XElement> nodes)
+   public TiledTileLayer[] ParseTileLayers(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledTileLayer>();
       foreach (var item in nodes)
@@ -212,7 +305,7 @@ public static class TiledParser
       return output.ToArray();
    }
 
-   private static TiledLayerData ParseLayerData(XElement node)
+   private TiledLayerData ParseLayerData(XElement node)
    {
       string? gids = node.Value;
       IEnumerable<XElement> nodes = node.Elements("chunk");
@@ -222,7 +315,7 @@ public static class TiledParser
       return output;
    }
 
-   private static TiledChunk[]? ParseChunkData(IEnumerable<XElement> nodes)
+   private TiledChunk[]? ParseChunkData(IEnumerable<XElement> nodes)
    {
       if (nodes.Count() == 0) return null;
 
@@ -242,7 +335,7 @@ public static class TiledParser
 
    // CustomProperties
 
-   private static TiledProperty[] ParseCustomProperties(IEnumerable<XElement> nodes)
+   private TiledProperty[] ParseCustomProperties(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledProperty>();
       foreach (var item in nodes)
@@ -255,4 +348,6 @@ public static class TiledParser
       }
       return output.ToArray();
    }
+
+   #endregion
 }

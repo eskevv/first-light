@@ -11,7 +11,7 @@ public class TiledTileLayer
    public float ParallaxY;
    public int Width;
    public int Height;
-   public TiledLayerData LayerData = default!;
+   public TiledLayerData? LayerData;
    public TiledProperty[]? CustomProperties;
 }
 
