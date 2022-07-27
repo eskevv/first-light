@@ -1,15 +1,17 @@
 using FirstLight.TiledModels;
-namespace FirstLight;
 
-public class TiledObjectGroup
+public class TiledImageLayer
 {
    public int Id;
-   public string? Name;
-   public string? Class;
    public float OffsetX;
    public float OffsetY;
    public float ParallaxX;
    public float ParallaxY;
-   public TiledObject[]? Objects;
+   public bool RepeatX;
+   public bool RepeatY;
+   
+   public string Name = default!;
+
+   public string? Class;
    public TiledProperty[]? CustomProperties;
 }

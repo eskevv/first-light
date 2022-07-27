@@ -3,9 +3,10 @@ using FirstLight.Utils;
 using System.Xml.Linq;
 namespace FirstLight.Loaders;
 
-public static class TmxLoader
+public class TmxLoader : TiledLoader
 {
-   public static TiledMap LoadTmx(string filePath)
+   // --Loading TiledMap
+   public TiledMap LoadTmx(string filePath)
    {
       if (!File.Exists(filePath)) throw new FirstLightException($"{filePath} not found.");
 
@@ -16,7 +17,7 @@ public static class TmxLoader
       return ParseMap(tmxDocument);
    }
 
-   private static TiledMap ParseMap(XDocument document)
+   private TiledMap ParseMap(XDocument document)
    {
       XElement? mapRoot = document.Element("map");
       if (mapRoot == null) throw new FirstLightException("This tmx file is not parseable.");
@@ -32,10 +33,10 @@ public static class TmxLoader
       tiledMap.Height = int.Parse(mapRoot.Attribute("height")?.Value ?? "0");
       tiledMap.TileWidth = int.Parse(mapRoot.Attribute("tilewidth")?.Value ?? "0");
       tiledMap.TileHeight = int.Parse(mapRoot.Attribute("tileheight")?.Value ?? "0");
-      tiledMap.Version = mapRoot.Attribute("version")?.Value;
-      tiledMap.TiledVersion = mapRoot.Attribute("tiledversion")?.Value;
-      tiledMap.Orientation = mapRoot.Attribute("orientation")?.Value;
-      tiledMap.RenderOrder = mapRoot.Attribute("renderorder")?.Value;
+      tiledMap.Version = mapRoot.Attribute("version")?.Value ?? "0";
+      tiledMap.TiledVersion = mapRoot.Attribute("tiledversion")?.Value ?? "0";
+      tiledMap.Orientation = mapRoot.Attribute("orientation")?.Value ?? "0";
+      tiledMap.RenderOrder = mapRoot.Attribute("renderorder")?.Value ?? "0";
       tiledMap.Infinite = (mapRoot.Attribute("infinite")?.Value == "1");
       tiledMap.Class = mapRoot.Attribute("class")?.Value;
       tiledMap.ParallaxOriginX = int.Parse(mapRoot.Attribute("parallaxoriginx")?.Value ?? "0");
@@ -54,21 +55,21 @@ public static class TmxLoader
    }
 
    // --Tilesets
-   private static TiledMapTileset[] ParseMapTilesets(IEnumerable<XElement> nodes)
+   private TiledMapTileset[] ParseMapTilesets(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledMapTileset>();
       foreach (var item in nodes)
       {
          var tileset = new TiledMapTileset();
          tileset.FirstGid = int.Parse(item.Attribute("firstgid")?.Value ?? "0");
-         tileset.Source = item.Attribute("source")?.Value;
+         tileset.Source = item.Attribute("source")?.Value ?? "0";
          output.Add(tileset);
       }
       return output.ToArray();
    }
 
    // --Objects
-   private static TiledObjectGroup[] ParseObjectGroups(IEnumerable<XElement> nodes)
+   private TiledObjectGroup[] ParseObjectGroups(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledObjectGroup>();
       foreach (var item in nodes)
@@ -81,7 +82,7 @@ public static class TmxLoader
          objectGroup.OffsetY = float.Parse(item.Attribute("offsety")?.Value ?? "0");
          objectGroup.ParallaxX = float.Parse(item.Attribute("parallaxx")?.Value ?? "0");
          objectGroup.ParallaxY = float.Parse(item.Attribute("parallaxy")?.Value ?? "0");
-         objectGroup.Name = item.Attribute("name")?.Value;
+         objectGroup.Name = item.Attribute("name")?.Value ?? "0";
          objectGroup.Class = item.Attribute("class")?.Value;
          objectGroup.Objects = ParseObjects(objectElements);
 
@@ -94,7 +95,7 @@ public static class TmxLoader
       return output.ToArray();
    }
 
-   private static TiledObject[]? ParseObjects(IEnumerable<XElement> nodes)
+   private TiledObject[]? ParseObjects(IEnumerable<XElement> nodes)
    {
       if (nodes.Count() == 0) return null;
 
@@ -111,7 +112,7 @@ public static class TmxLoader
          shapeObject.Width = float.Parse(item.Attribute("width")?.Value ?? "0");
          shapeObject.Height = float.Parse(item.Attribute("height")?.Value ?? "0");
          shapeObject.Rotation = float.Parse(item.Attribute("rotation")?.Value ?? "0");
-         shapeObject.Name = item.Attribute("name")?.Value;
+         shapeObject.Name = item.Attribute("name")?.Value ?? "0";
          shapeObject.Class = item.Attribute("class")?.Value;
 
          if (ellipse != null)
@@ -131,7 +132,7 @@ public static class TmxLoader
       return output.ToArray();
    }
 
-   private static FloatCoords[] ParsePolygonPoints(XElement node)
+   private FloatCoords[] ParsePolygonPoints(XElement node)
    {
       var output = new List<FloatCoords>();
       string value = node.Attribute("points")?.Value ?? "0";
@@ -147,7 +148,7 @@ public static class TmxLoader
    }
 
    // --ImageLayers
-   private static TiledImageLayer[] ParseImageLayers(IEnumerable<XElement> nodes)
+   private TiledImageLayer[] ParseImageLayers(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledImageLayer>();
       foreach (var item in nodes)
@@ -159,7 +160,7 @@ public static class TmxLoader
          imageLayer.OffsetY = float.Parse(item.Attribute("offsety")?.Value ?? "0");
          imageLayer.ParallaxX = float.Parse(item.Attribute("parallaxx")?.Value ?? "0");
          imageLayer.ParallaxY = float.Parse(item.Attribute("parallaxy")?.Value ?? "0");
-         imageLayer.Name = item.Attribute("name")?.Value;
+         imageLayer.Name = item.Attribute("name")?.Value ?? "0";
          imageLayer.Class = item.Attribute("class")?.Value;
 
          if (properties != null)
@@ -173,7 +174,7 @@ public static class TmxLoader
    }
 
    // --TileLayers
-   public static TiledTileLayer[] ParseTileLayers(IEnumerable<XElement> nodes)
+   public TiledTileLayer[] ParseTileLayers(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledTileLayer>();
       foreach (var item in nodes)
@@ -188,7 +189,7 @@ public static class TmxLoader
          layer.OffsetY = float.Parse(item.Attribute("offsety")?.Value ?? "0");
          layer.ParallaxX = float.Parse(item.Attribute("parallaxx")?.Value ?? "0");
          layer.ParallaxY = float.Parse(item.Attribute("parallaxy")?.Value ?? "0");
-         layer.Name = item.Attribute("name")?.Value;
+         layer.Name = item.Attribute("name")?.Value ?? "0";
          layer.Class = item.Attribute("class")?.Value;
 
          if (data != null)
@@ -204,7 +205,7 @@ public static class TmxLoader
       return output.ToArray();
    }
 
-   private static TiledLayerData ParseLayerData(XElement node)
+   private TiledLayerData ParseLayerData(XElement node)
    {
       string? gids = node.Value;
       IEnumerable<XElement> nodes = node.Elements("chunk");
@@ -214,7 +215,7 @@ public static class TmxLoader
       return output;
    }
 
-   private static TiledChunk[]? ParseChunkData(IEnumerable<XElement> nodes)
+   private TiledChunk[]? ParseChunkData(IEnumerable<XElement> nodes)
    {
       if (nodes.Count() == 0) return null;
 
@@ -228,21 +229,6 @@ public static class TmxLoader
          chunk.Height = int.Parse(item.Attribute("height")?.Value ?? "0");
          chunk.Data = item.Value.ToIntArray();
          output.Add(chunk);
-      }
-      return output.ToArray();
-   }
-
-   // --CustomProperties
-   private static TiledProperty[] ParseCustomProperties(IEnumerable<XElement> nodes)
-   {
-      var output = new List<TiledProperty>();
-      foreach (var item in nodes)
-      {
-         var property = new TiledProperty();
-         property.Name = item.Attribute("name")?.Value;
-         property.Type = item.Attribute("type")?.Value;
-         property.Value = item.Attribute("value")?.Value;
-         output.Add(property);
       }
       return output.ToArray();
    }

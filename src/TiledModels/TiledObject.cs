@@ -3,16 +3,18 @@ namespace FirstLight.TiledModels;
 public class TiledObject
 {
    public int Id;
-   public string? Name;
-   public string? Class;
    public float X;
    public float Y;
    public float Width;
    public float Height;
    public float Rotation;
+   public TiledShapeType Type;
+
+   public string Name = default!;
+   
+   public string? Class;
    public FloatCoords[]? Points;
    public TiledProperty[]? CustomProperties;
-   public TiledShapeType Type;
 }
 
 public enum TiledShapeType

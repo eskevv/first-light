@@ -68,12 +68,13 @@ public class TileMap
    /// <param name="layerColumns">The total columns found in the layer.</param>
    public LightTile? GetTileData(int tileGid, int mapIteration, int layerColumns)
    {
-      TiledTileset? tileset = GetTilesetPair(tileGid).Value;
-      int firstGid = GetTilesetPair(tileGid).Key;
+      var pair = GetTilesetPair(tileGid);
+      TiledTileset? tileset = pair.Value;
+      int firstGid = pair.Key;
 
       if (tileset == null) return null;
-      
-      int tileId = tileGid = firstGid;
+
+      int tileId = tileGid - firstGid;
       return new LightTile(tileId, tileset, mapIteration, layerColumns);
    }
 }

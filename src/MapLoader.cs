@@ -7,7 +7,9 @@ public static class MapLoader
 {
    public static TileMap Load(string filePath)
    {
-      var tiledMap = TmxLoader.LoadTmx(filePath);
+      var tmxLoader = new TmxLoader();
+
+      var tiledMap = tmxLoader.LoadTmx(filePath);
       var tilesets = LoadTilesets(tiledMap.Tilesets, filePath);
 
       return new TileMap(tiledMap, tilesets);
@@ -24,7 +26,9 @@ public static class MapLoader
          int firstGid = item.FirstGid;
          string source = item.Source ?? "0";
          string fullPath = source.CombineWithPath(filePath);;
-         output[firstGid] = TsxLoader.LoadTsx(fullPath);
+
+         var tsxLoader = new TsxLoader();
+         output[firstGid] = tsxLoader.LoadTsx(fullPath);
       }
       return output;
    }

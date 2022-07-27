@@ -2,7 +2,7 @@ namespace FirstLight.TiledModels;
 
 public class TiledProperty
 {
-   public string? Name;
-   public string? Type;
-   public string? Value;
+   public string Name = default!;
+   public string Type = default!;
+   public string Value = default!;
 }

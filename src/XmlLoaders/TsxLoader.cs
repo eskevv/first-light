@@ -3,26 +3,33 @@ using FirstLight.Utils;
 using System.Xml.Linq;
 namespace FirstLight.Loaders;
 
-public static class TsxLoader
+public class TsxLoader : TiledLoader
 {
-   public static TiledTileset LoadTsx(string filePath)
+   // --Loading Tileset
+   public TiledTileset LoadTsx(string filePath)
    {
       if (!File.Exists(filePath)) throw new FirstLightException($"{filePath} not found.");
 
       if (!filePath.EndsWith(".tsx")) throw new FirstLightException("Unsupported file format");
 
       XDocument tsxDocument = XDocument.Load(filePath);
-      XElement? tilesetRoot = tsxDocument.Element("tileset");
+
+      return ParseTileset(tsxDocument);
+   }
+
+   private TiledTileset ParseTileset(XDocument document)
+   {
+      XElement? tilesetRoot = document.Element("tileset");
 
       if (tilesetRoot == null) throw new FirstLightException("This tsx file is not parseable.");
 
       XElement? properties = tilesetRoot.Element("properties");
       IEnumerable<XElement> tiles = tilesetRoot.Elements("tile");
       var tileset = new TiledTileset();
-      tileset.Name = tilesetRoot.Attribute("name")?.Value;
-      tileset.Class = tilesetRoot.Attribute("class")?.Value;
-      tileset.Version = tilesetRoot.Attribute("version")?.Value;
-      tileset.TiledVersion = tilesetRoot.Attribute("tiledversion")?.Value;
+      tileset.Name = tilesetRoot.Attribute("name")?.Value ?? "0";
+      tileset.Class = tilesetRoot.Attribute("class")?.Value ?? "0";
+      tileset.Version = tilesetRoot.Attribute("version")?.Value ?? "0";
+      tileset.TiledVersion = tilesetRoot.Attribute("tiledversion")?.Value ?? "0";
       tileset.TileWidth = int.Parse(tilesetRoot.Attribute("tilewidth")?.Value ?? "0");
       tileset.TileHeight = int.Parse(tilesetRoot.Attribute("tileheight")?.Value ?? "0");
       tileset.TileCount = int.Parse(tilesetRoot.Attribute("tilecount")?.Value ?? "0");
@@ -38,7 +45,9 @@ public static class TsxLoader
       return tileset;
    }
 
-   private static TiledAnimation[]? ParseTiledAnimations(IEnumerable<XElement> nodes)
+   // --Animations
+
+   private TiledAnimation[]? ParseTiledAnimations(IEnumerable<XElement> nodes)
    {
       if (nodes.Count() == 0) return null;
       var output = new List<TiledAnimation>();
@@ -55,7 +64,7 @@ public static class TsxLoader
       return output.ToArray();
    }
 
-   private static TiledFrame[] ParseFrames(IEnumerable<XElement> nodes)
+   private TiledFrame[] ParseFrames(IEnumerable<XElement> nodes)
    {
       var output = new List<TiledFrame>();
       foreach (var item in nodes)
@@ -69,26 +78,14 @@ public static class TsxLoader
       return output.ToArray();
    }
 
-   private static TiledImage ParseTiledimage(XElement element)
+   // --TiledImage
+
+   private TiledImage ParseTiledimage(XElement element)
    {
       var output = new TiledImage();
-      output.Source = element.Attribute("source")?.Value;
+      output.Source = element.Attribute("source")?.Value ?? "0";
       output.Width = int.Parse(element.Attribute("width")?.Value ?? "0");
       output.Height = int.Parse(element.Attribute("height")?.Value ?? "0");
       return output;
-   }
-
-   private static TiledProperty[] ParseCustomProperties(IEnumerable<XElement> nodes)
-   {
-      var output = new List<TiledProperty>();
-      foreach (var item in nodes)
-      {
-         var property = new TiledProperty();
-         property.Name = item.Attribute("name")?.Value;
-         property.Type = item.Attribute("type")?.Value;
-         property.Value = item.Attribute("value")?.Value;
-         output.Add(property);
-      }
-      return output.ToArray();
    }
 }

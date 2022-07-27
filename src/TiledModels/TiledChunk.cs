@@ -6,5 +6,6 @@ public class TiledChunk
    public int Y;
    public int Width;
    public int Height;
-   public int[]? Data;
+   
+   public int[] Data = default!;
 }
