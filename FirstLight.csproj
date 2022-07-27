@@ -9,11 +9,11 @@
 
   <PropertyGroup>
     <PackageId>FirstLight</PackageId>
-    <Version>0.8.6</Version>
+    <Version>1.0.0</Version>
     <Authors>eskevv</Authors>
     <Company>eskevv</Company>
     <Copyright>eskevv 2022</Copyright>
-    <PackageDescription>C# library for fully parsing and loading Tiled maps and tilesets.</PackageDescription>
+    <PackageDescription>C# library for parsing and loading your Tiled maps and tsx files.</PackageDescription>
     <PackageProjectUrl>https://github.com/eskevv/FirstLight</PackageProjectUrl>
     <RepositoryUrl>https://github.com/eskevv/FirstLight</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
