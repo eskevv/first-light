@@ -1,8 +1,5 @@
 # FirstLight
 
-Developer branch is a retake on the parsing proccess, with the goal of being more optimized before an official release.  
-Some features were removed as they seemed unstable or not useful.
-
 FirstLight is a standalone .NET C# library for importing and fully automating all of your work from the Tiled editor.  
 *No ID management is needed to get your map shown on the screen.*
 All data is saved inside of a ```TileMap``` class which closeley resembles the original TMX format.
