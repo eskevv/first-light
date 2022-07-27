@@ -1,7 +1,7 @@
 # FirstLight
 
-Developer branch is a retake on the parsic proccess.
--With the goal of being more optimized before an official release. (some features were removed as they seemed unstable or not useful)
+Developer branch is a retake on the parsing proccess, with the goal of being more optimized before an official release.  
+Some features were removed as they seemed unstable or not useful.
 
 FirstLight is a standalone .NET C# library for importing and fully automating all of your work from the Tiled editor.  
 *No ID management is needed to get your map shown on the screen.* This also means animations.
