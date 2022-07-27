@@ -5,6 +5,8 @@ namespace FirstLight;
 
 public static class MapLoader
 {
+   static void Main(string[] args) { }
+   
    public static TileMap Load(string filePath)
    {
       var tmxLoader = new TmxLoader();
