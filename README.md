@@ -13,8 +13,6 @@ ensures that maps can be quickly displayed on the screen with minimal effort, an
 Note: It is up to you to store the actual textures, (preferably to cache them by tileset name). As a standalone library, FirstLight doesn't do any of the
 actual rendering, but provides an interface to all of the necessary tmx data. This versatility means you can use it with popular game engines like Unity3D, Godot, or CryEngine.
 
-<<<<<<< HEAD
-=======
 **Tile Structure** 
 > Drawing tiles is as simple as pulling data from a collection of a built in type which includes values like:  
 > * Image name
@@ -82,7 +80,6 @@ var gidTilesetPair = map.GetTileSetPair(tileGid);
 var gids = map.TileLayers.First(x => x.Name == "stars").LayerData.Gids;
 ```
 
->>>>>>> a8a55887c03b681749c7b1bef2c28108af6926b8
 ---
 ### Installation
 **Option 1**: With Nuget Package Manager:  
