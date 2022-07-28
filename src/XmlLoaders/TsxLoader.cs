@@ -20,20 +20,19 @@ public class TsxLoader : TiledLoader
    private TiledTileset ParseTileset(XDocument document)
    {
       XElement? tilesetRoot = document.Element("tileset");
-
       if (tilesetRoot == null) throw new FirstLightException("This tsx file is not parseable.");
 
       XElement? properties = tilesetRoot.Element("properties");
       IEnumerable<XElement> tiles = tilesetRoot.Elements("tile");
       var tileset = new TiledTileset();
       tileset.Name = tilesetRoot.Attribute("name")?.Value ?? "0";
-      tileset.Class = tilesetRoot.Attribute("class")?.Value ?? "0";
       tileset.Version = tilesetRoot.Attribute("version")?.Value ?? "0";
       tileset.TiledVersion = tilesetRoot.Attribute("tiledversion")?.Value ?? "0";
       tileset.TileWidth = int.Parse(tilesetRoot.Attribute("tilewidth")?.Value ?? "0");
       tileset.TileHeight = int.Parse(tilesetRoot.Attribute("tileheight")?.Value ?? "0");
       tileset.TileCount = int.Parse(tilesetRoot.Attribute("tilecount")?.Value ?? "0");
       tileset.Columns = int.Parse(tilesetRoot.Attribute("columns")?.Value ?? "0");
+      tileset.Class = tilesetRoot.Attribute("class")?.Value;
       tileset.Image = ParseTiledimage(tilesetRoot);
       tileset.Animations = ParseTiledAnimations(tiles);
 
