@@ -1,4 +1,4 @@
-namespace FirstLight.TiledModels;
+namespace FirstLight;
 
 public class TiledImage
 {

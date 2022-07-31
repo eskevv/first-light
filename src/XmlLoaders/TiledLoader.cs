@@ -1,5 +1,4 @@
 using System.Xml.Linq;
-using FirstLight.TiledModels;
 namespace FirstLight.Loaders;
 
 public abstract class TiledLoader
