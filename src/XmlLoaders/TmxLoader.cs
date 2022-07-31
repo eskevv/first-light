@@ -105,6 +105,7 @@ public class TmxLoader : TiledLoader
          XElement? properties = item.Element("properties");
          XElement? ellipse = item.Element("ellipse");
          XElement? polygon = item.Element("polygon");
+
          var shapeObject = new TiledObject();
          shapeObject.Id = int.Parse(item.Attribute("id")?.Value ?? "0");
          shapeObject.X = float.Parse(item.Attribute("x")?.Value ?? "0");
@@ -128,6 +129,8 @@ public class TmxLoader : TiledLoader
          {
             shapeObject.CustomProperties = ParseCustomProperties(properties.Elements("property"));
          }
+
+         output.Add(shapeObject);
       }
       return output.ToArray();
    }
