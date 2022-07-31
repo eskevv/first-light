@@ -73,6 +73,8 @@ var gidTilesetPair = map.GetTileSetPair(tileGid);
 // and grab the gids for a layer
 var gids = map.TileLayers.First(x => x.Name == "stars").LayerData.Gids;
 ```
+```GetTilesetPair(tileGid)``` will return a Key, Value pair where the key is the first gid and value is the actual Tileset.
+This tileset is a compact datas tructure that resembles the tsx file that the given gid belongs to.
 
 ---
 ### Installation
