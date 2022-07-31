@@ -25,7 +25,7 @@ Example of finding all objects under a class for specific layers:
 // first create a list to store what you need
 var objectsList = new List<TiledObject>();
 
-// filter layers
+// filter layers / objects
 IEnumerable<TiledObjectGroup> skyObjects = map.ObjectLayers.Where(x => x.Class == "sky-objects");
 
 // loop through selected layers and look for all objects with class 'planes'
@@ -37,7 +37,8 @@ foreach (var item in skyObjects)
 }
 
 ```
-It is also pretty easy to render all your tiles out of the box. There are several methods depending if you are making your own tile objects.
+### Rendering Tiles
+It should also be fairly straightforward to render the map tiles right out of the box. There are several methods depending on whether you are making your own Tile class.
 The more out of the box method:
 ```cs
 // grab the tile layers you want to render
