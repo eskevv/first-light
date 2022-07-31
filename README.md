@@ -47,8 +47,8 @@ IEnumerable<TiledTileLayer> vegetation = map.TileLayers.Where(x => x.Class == "v
 // loop though each vegetation layer (usually you will render everything at once)
 foreach (var item in vegetation)
 {
-   // layer data depends on if your using infinite maps
-   if (item.LayerData.Gids == null) continue; // i will use gids here as the more simple options 
+   // layer data depends if your using infinite maps but i will use gids here
+   if (item.LayerData.Gids == null) continue;
    for (int x = 0; x < item.LayerData.Gids.Length; x++)
    {
       int gid = item.LayerData.Gids[x];
