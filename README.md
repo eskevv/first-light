@@ -58,7 +58,7 @@ foreach (var item in vegetation)
       var srcRect = new Rectangle(tile.SourceX, tile.SourceY, tile.Width, tile.Height);
       var texture = MyTexturebank[tile.ImageName];
       
-      // you could also do animation updates by getting the tile.FrameData property
+      // you could also do animation updates using the tiles FrameData[]
 
       // very generic draw call
       batch.Draw(texture, position, srcRect);
