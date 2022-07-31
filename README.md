@@ -25,7 +25,7 @@ Example of finding all objects under a class for specific layers:
 // first create a list to store what you need
 var objectsList = new List<TiledObject>();
 
-// filter layers
+// filter layers / objects
 IEnumerable<TiledObjectGroup> skyObjects = map.ObjectLayers.Where(x => x.Class == "sky-objects");
 
 // loop through selected layers and look for all objects with class 'planes'
@@ -37,7 +37,8 @@ foreach (var item in skyObjects)
 }
 
 ```
-It is also pretty easy to render all your tiles out of the box. There are several methods depending if you are making your own tile objects.
+### Rendering Tiles
+It should also be fairly straightforward to render the map tiles right out of the box. There are several methods depending on whether you are making your own Tile class.
 The more out of the box method:
 ```cs
 // grab the tile layers you want to render
@@ -46,8 +47,8 @@ IEnumerable<TiledTileLayer> vegetation = map.TileLayers.Where(x => x.Class == "v
 // loop though each vegetation layer (usually you will render everything at once)
 foreach (var item in vegetation)
 {
-   // layer data depends on if your using infinite maps
-   if (item.LayerData.Gids == null) continue; // i will use gids here as the more simple options 
+   // layer data depends if your using infinite maps but i will use gids here
+   if (item.LayerData.Gids == null) continue;
    for (int x = 0; x < item.LayerData.Gids.Length; x++)
    {
       int gid = item.LayerData.Gids[x];
@@ -57,7 +58,7 @@ foreach (var item in vegetation)
       var srcRect = new Rectangle(tile.SourceX, tile.SourceY, tile.Width, tile.Height);
       var texture = MyTexturebank[tile.ImageName];
       
-      // you could also do animation updates by getting the tile.FrameData property
+      // you could also do animation updates using the tiles FrameData[]
 
       // very generic draw call
       batch.Draw(texture, position, srcRect);
@@ -67,11 +68,14 @@ foreach (var item in vegetation)
 
 And of course you can hook up tile data yourself if you feel the need by calling:
 ```cs
-// access to all the tileset data
-var gidTilesetPair = map.GetTileSetPair(tileGid);
-// and grab the gids for a layer
-var gids = map.TileLayers.First(x => x.Name == "stars").LayerData.Gids;
+// access to a tileset through a tileGid
+KeyValuePair<int, TiledTileset?> gidTilesetPair = map.GetTileSetPair(tileGid);
+
+// now grab the gids for a layer
+int[] gids = map.TileLayers.First(x => x.Name == "stars").LayerData.Gids;
 ```
+```GetTilesetPair(tileGid)``` will return a Key, Value pair where the key is the first gid and value is the actual Tileset.
+This tileset is a compact data structure that resembles the tsx file that the given gid belongs to.
 
 ---
 ### Installation
