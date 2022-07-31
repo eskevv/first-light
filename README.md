@@ -52,6 +52,7 @@ foreach (var item in vegetation)
    for (int x = 0; x < item.LayerData.Gids.Length; x++)
    {
       int gid = item.LayerData.Gids[x];
+      if (gid == 0) continue; // make sure you don't include empty tiles
       LightTile? tile = map.GetTileData(gid, x, item.Width);
 
       var position = new Position(tile.WorldPositionX, tile.WorldPositionY);
