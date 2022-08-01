@@ -15,7 +15,7 @@ actual rendering, but provides an interface to all of the necessary tmx data. Th
 > * Image name
 > * Tileset SourceCoords
 > * World position
-> * Animation data
+> * Animation data  
 
 **Loading a Tilemap**
 ```cs
