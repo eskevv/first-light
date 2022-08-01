@@ -17,6 +17,11 @@ actual rendering, but provides an interface to all of the necessary tmx data. Th
 > * World position
 > * Animation data
 
+**Loading a Tilemap**
+```cs
+Tilemap map = MapLoader.Load(filePath); // that's it
+```
+
 **Working with Layers**  
 
 Finding most data throughout the ```TileMap``` instance  is best done with Linq.  
