@@ -105,6 +105,10 @@ You need .NET 6 to start using First light as it was built with a more modern sy
 Tiled should work with most if not all versions of Tiled up to it's latest stable release v1.9.
 You can also read what package supports your version of Tiled. But it's recommended that you use the lastest stable one.
 
+### Currently Unsupported Features:
+* Tile flipping
+* Individually collected tileset images (tilesets should be one single image)
+
 ---
 ### Contribution
 Feel free to open up an issue or request any improvements to the project. If you have any plan to modify the code please open up an issue first with the details on what you would like to change. You may also currently do a pull request directly from the main branch as it is also still the development branch.
