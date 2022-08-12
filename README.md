@@ -106,7 +106,7 @@ Tiled should work with most if not all versions of Tiled up to it's latest stabl
 You can also read what package supports your version of Tiled. But it's recommended that you use the lastest stable one.
 
 ---
-### Currently Unsupported Features:
+### Currently Unsupported Features
 * Tile flipping
 * Individually collected tileset images (tilesets should be one single image)
 
