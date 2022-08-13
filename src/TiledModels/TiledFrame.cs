@@ -2,6 +2,6 @@ namespace FirstLight;
 
 public class TiledFrame
 {
-   public int TiledId;
-   public int Duration;
+    public int TiledId;
+    public int Duration;
 }

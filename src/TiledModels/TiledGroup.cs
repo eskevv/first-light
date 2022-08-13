@@ -2,14 +2,14 @@ namespace FirstLight;
 
 public class TiledGroup
 {
-   public int Id;
-   public float OffsetX;
-   public float OffsetY;
-   public float ParallaxX;
-   public float ParallaxY;
-   
-   public string Name = default!;
+    public int Id;
+    public float OffsetX;
+    public float OffsetY;
+    public float ParallaxX;
+    public float ParallaxY;
 
-   public string? Class;
-   public TiledProperty[]? CustomProperties;
+    public string Name = default!;
+
+    public string? Class;
+    public TiledProperty[]? CustomProperties;
 }

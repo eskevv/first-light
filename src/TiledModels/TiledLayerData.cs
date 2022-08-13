@@ -2,6 +2,6 @@ namespace FirstLight;
 
 public class TiledLayerData
 {
-   public int[]? Gids;
-   public TiledChunk[]? Chunks;
+    public int[]? Gids;
+    public TiledChunk[]? Chunks;
 }

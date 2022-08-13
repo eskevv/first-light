@@ -1,8 +1,8 @@
-namespace FirstLight.Utils;
+namespace FirstLight;
 
 public class FirstLightException : Exception
 {
-   public FirstLightException(string message) : base(message)
-   {
-   }
+    public FirstLightException(string message) : base(message)
+    {
+    }
 }

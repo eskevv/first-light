@@ -2,7 +2,7 @@ namespace FirstLight;
 
 public class TiledAnimation
 {
-   public int Id;
+    public int Id;
 
-   public TiledFrame[] Frames = default!;
+    public TiledFrame[] Frames = default!;
 }

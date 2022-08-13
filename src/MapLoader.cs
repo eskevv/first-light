@@ -1,34 +1,34 @@
-using FirstLight.Loaders;
-using FirstLight.Utils;
 namespace FirstLight;
 
 public static class MapLoader
 {
-   public static TileMap Load(string filePath)
-   {
-      var tmxLoader = new TmxLoader();
+    static void Main(string[] args) { }
 
-      var tiledMap = tmxLoader.LoadTmx(filePath);
-      var tilesets = LoadTilesets(tiledMap.Tilesets, filePath);
+    public static TileMap Load(string filePath)
+    {
+        var tmxLoader = new TmxLoader();
 
-      return new TileMap(tiledMap, tilesets);
-   }
+        var tiledMap = tmxLoader.LoadTmx(filePath);
+        var tilesets = LoadTilesets(tiledMap.Tilesets, filePath);
 
-   private static Dictionary<int, TiledTileset> LoadTilesets(TiledMapTileset[]? mapTilesets, string filePath)
-   {
-      var output = new Dictionary<int, TiledTileset>();
+        return new TileMap(tiledMap, tilesets);
+    }
 
-      if (mapTilesets == null) return output;
+    private static Dictionary<int, TiledTileset> LoadTilesets(TiledMapTileset[]? mapTilesets, string filePath)
+    {
+        var output = new Dictionary<int, TiledTileset>();
 
-      foreach (var item in mapTilesets)
-      {
-         int firstGid = item.FirstGid;
-         string source = item.Source ?? "0";
-         string fullPath = source.CombineWithPath(filePath);;
+        if (mapTilesets == null) return output;
 
-         var tsxLoader = new TsxLoader();
-         output[firstGid] = tsxLoader.LoadTsx(fullPath);
-      }
-      return output;
-   }
+        foreach (var item in mapTilesets)
+        {
+            int firstGid = item.FirstGid;
+            string source = item.Source ?? "0";
+            string fullPath = source.CombineWithPath(filePath);
+
+            var tsxLoader = new TsxLoader();
+            output[firstGid] = tsxLoader.LoadTsx(fullPath);
+        }
+        return output;
+    }
 }
