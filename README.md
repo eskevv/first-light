@@ -15,7 +15,12 @@ actual rendering, but provides an interface to all of the necessary tmx data. Th
 > * Image name
 > * Tileset SourceCoords
 > * World position
-> * Animation data
+> * Animation data  
+
+**Loading a Tilemap**
+```cs
+Tilemap map = MapLoader.Load(filePath); // that's it
+```
 
 **Working with Layers**  
 
@@ -52,6 +57,7 @@ foreach (var item in vegetation)
    for (int x = 0; x < item.LayerData.Gids.Length; x++)
    {
       int gid = item.LayerData.Gids[x];
+      if (gid == 0) continue; // make sure you don't include empty tiles
       LightTile? tile = map.GetTileData(gid, x, item.Width);
 
       var position = new Position(tile.WorldPositionX, tile.WorldPositionY);
@@ -98,6 +104,11 @@ You need .NET 6 to start using First light as it was built with a more modern sy
 
 Tiled should work with most if not all versions of Tiled up to it's latest stable release v1.9.
 You can also read what package supports your version of Tiled. But it's recommended that you use the lastest stable one.
+
+---
+### Currently Unsupported Features
+* Tile flipping
+* Individually collected tileset images (tilesets should be one single image)
 
 ---
 ### Contribution
