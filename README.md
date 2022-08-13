@@ -108,7 +108,6 @@ You can also read what package supports your version of Tiled. But it's recommen
 ---
 ### Currently Unsupported Features
 * Tile flipping
-* Individually collected tileset images (tilesets should be one single image)
 
 ---
 ### Contribution
