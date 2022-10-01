@@ -15,8 +15,11 @@ public static class Extensions
 
     public static string FileName(this string src)
     {
-        int index = src.LastIndexOf('/');
-        int extensionIndex = src.LastIndexOf('.');
-        return src.Substring(index + 1, extensionIndex - (index + 1));
+        int findIndex = src.LastIndexOf('/');
+        int findExtnesion = src.LastIndexOf('.');
+        int index = findIndex == -1 ? 0 : findIndex + 1;
+        int extension = findExtnesion == -1 ? src.Length : findExtnesion;
+        
+        return src.Substring(index, extension - index);
     }
 }

@@ -34,7 +34,8 @@ public class TsxLoader : TiledLoader
         tileset.Class = tilesetRoot.Attribute("class")?.Value;
 
         if (oneImage != null)
-            tileset.Image = ParseTiledImage(tilesetRoot);
+            tileset.Image = ParseTiledImage(oneImage);
+
         else if (tiles.Count() > 0)
             tileset.ImageCollection = ParseTilesetImages(tiles);
 
@@ -42,6 +43,7 @@ public class TsxLoader : TiledLoader
 
         if (properties != null)
             tileset.CustomProperties = ParseCustomProperties(properties.Elements("property"));
+
 
         return tileset;
     }
@@ -109,6 +111,7 @@ public class TsxLoader : TiledLoader
         output.Source = element.Attribute("source")?.Value ?? "0";
         output.Width = int.Parse(element.Attribute("width")?.Value ?? "0");
         output.Height = int.Parse(element.Attribute("height")?.Value ?? "0");
+
         return output;
     }
 }
