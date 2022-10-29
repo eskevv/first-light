@@ -8,6 +8,8 @@ public class TileMap
     public readonly string TiledVersion;
     public readonly string Orientation;
     public readonly string RenderOrder;
+    public readonly int TileWidth;
+    public readonly int TileHeight;
     public readonly float[] ParallaxOrigin;
     public readonly int[] TileDimensions;
     public readonly TiledProperty[]? CustomProperties;
@@ -20,6 +22,8 @@ public class TileMap
     {
         Rows = map.Height;
         Columns = map.Width;
+        TileWidth = map.TileWidth;
+        TileHeight = map.TileHeight;
         IsInfinite = map.Infinite;
         TiledVersion = map.TiledVersion ?? "0";
         Orientation = map.Orientation ?? "0";
@@ -61,15 +65,16 @@ public class TileMap
     /// <param name="tileGid">The gid for the tile as found inside of the layer data.</param>
     /// <param name="mapIteration">The linear tile location when looping through every tile in the layer.</param>
     /// <param name="layerColumns">The total columns found in the layer.</param>
-    public LightTile? GetTileData(int tileGid, int mapIteration, int layerColumns)
+    public LightTile? GetTileData(int mapIteration, TiledTileLayer layer)
     {
-        var pair = GetTilesetPair(tileGid);
+        int gid = layer.LayerData.Gids![mapIteration];
+        var pair = GetTilesetPair(gid);
         TiledTileset? tileset = pair.Value;
         int firstGid = pair.Key;
 
         if (tileset == null) return null;
 
-        int tileId = tileGid - firstGid;
-        return new LightTile(tileId, tileset, mapIteration, layerColumns);
+        int tileId = gid - firstGid;
+        return new LightTile(tileId, tileset, mapIteration, layer);
     }
 }

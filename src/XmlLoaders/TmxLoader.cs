@@ -42,7 +42,7 @@ public class TmxLoader : TiledLoader
         tiledMap.ParallaxOriginX = int.Parse(mapRoot.Attribute("parallaxoriginx")?.Value ?? "0");
         tiledMap.ParallaxOriginY = int.Parse(mapRoot.Attribute("parallaxoriginy")?.Value ?? "0");
         tiledMap.Tilesets = ParseMapTilesets(tilesets);
-        tiledMap.TileLayers = ParseTileLayers(tileLayers);
+        tiledMap.TileLayers = ParseTileLayers(tileLayers, tiledMap.TileWidth, tiledMap.TileHeight);
         tiledMap.ImageLayers = ParseImageLayers(imagelayers);
         tiledMap.ObjectGroups = ParseObjectGroups(objectgroups);
 
@@ -177,7 +177,7 @@ public class TmxLoader : TiledLoader
     }
 
     // --TileLayers
-    public TiledTileLayer[] ParseTileLayers(IEnumerable<XElement> nodes)
+    public TiledTileLayer[] ParseTileLayers(IEnumerable<XElement> nodes, int tileWidth, int tileHeight)
     {
         var output = new List<TiledTileLayer>();
         foreach (var item in nodes)
@@ -194,6 +194,8 @@ public class TmxLoader : TiledLoader
             layer.ParallaxY = float.Parse(item.Attribute("parallaxy")?.Value ?? "0");
             layer.Name = item.Attribute("name")?.Value ?? "0";
             layer.Class = item.Attribute("class")?.Value;
+            layer.TileWidth = tileWidth;
+            layer.TileHeight = tileHeight;
 
             if (data != null)
             {

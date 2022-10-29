@@ -13,7 +13,7 @@ public class LightTile
     public readonly string ImageName;
     public readonly LightAnimation[]? FrameData;
 
-    public LightTile(int tileId, TiledTileset tileset, int mapIteration, int layerColumns)
+    public LightTile(int tileId, TiledTileset tileset, int mapIteration, TiledTileLayer layer)
     {
         if (tileset.Image == null && tileId >= 0)
         {
@@ -34,8 +34,8 @@ public class LightTile
         }
 
 
-        WorldPositionX = (mapIteration % layerColumns) * tileset.TileWidth;
-        WorldPositionY = (mapIteration / layerColumns) * tileset.TileHeight;
+        WorldPositionX = (mapIteration % layer.Width) * layer.TileWidth;
+        WorldPositionY = (mapIteration / layer.Height) * layer.TileHeight;
 
         if (tileset.Animations == null)
             return;

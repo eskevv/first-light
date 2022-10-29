@@ -9,6 +9,8 @@ public class TiledTileLayer
     public float ParallaxY;
     public int Width;
     public int Height;
+    public int TileWidth;
+    public int TileHeight;
 
     public string Name = default!;
     public TiledLayerData LayerData = default!;
